@@ -1,1 +1,97 @@
+<html>
+<head>
+    <title>Escala de Músicos da Igreja</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css"></link>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+</head>
+<body class="font-roboto bg-gray-100">
+    <div class="container mx-auto p-4">
+        <h1 class="text-3xl font-bold text-center mb-4">Escala de Músicos da Igreja - 2025</h1>
+        <div class="flex justify-between items-center mb-4">
+            <button id="prevMonth" class="bg-blue-500 text-white px-4 py-2 rounded"><i class="fas fa-chevron-left"></i> Mês Anterior</button>
+            <h2 id="monthYear" class="text-xl font-bold"></h2>
+            <button id="nextMonth" class="bg-blue-500 text-white px-4 py-2 rounded">Próximo Mês <i class="fas fa-chevron-right"></i></button>
+        </div>
+        <div id="calendar" class="grid grid-cols-7 gap-4">
+            <!-- Calendar days will be inserted here -->
+        </div>
+    </div>
 
+    <script>
+        const musicians = {
+            "2025-01-04": [{ name: "João", whatsapp: "https://wa.me/5511999999999" }],
+            "2025-01-05": [{ name: "Maria", whatsapp: "https://wa.me/5511988888888" }],
+            "2025-01-11": [{ name: "Pedro", whatsapp: "https://wa.me/5511977777777" }],
+            "2025-01-12": [{ name: "Ana", whatsapp: "https://wa.me/5511966666666" }],
+            "2025-01-18": [{ name: "Lucas", whatsapp: "https://wa.me/5511955555555" }],
+            "2025-01-19": [{ name: "Carla", whatsapp: "https://wa.me/5511944444444" }],
+            "2025-01-25": [{ name: "Paulo", whatsapp: "https://wa.me/5511933333333" }],
+            "2025-01-26": [{ name: "Beatriz", whatsapp: "https://wa.me/5511922222222" }],
+            // Add more dates and musicians as needed
+        };
+
+        const monthNames = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
+        let currentMonth = 0;
+        let currentYear = 2025;
+
+        function loadCalendar() {
+            const calendar = document.getElementById('calendar');
+            calendar.innerHTML = '';
+            const monthYear = document.getElementById('monthYear');
+            monthYear.textContent = `${monthNames[currentMonth]} ${currentYear}`;
+
+            const firstDay = new Date(currentYear, currentMonth, 1).getDay();
+            const daysInMonth = new Date(currentYear, currentMonth + 1, 0).getDate();
+
+            for (let i = 0; i < firstDay; i++) {
+                const emptyCell = document.createElement('div');
+                calendar.appendChild(emptyCell);
+            }
+
+            for (let day = 1; day <= daysInMonth; day++) {
+                const date = new Date(currentYear, currentMonth, day);
+                const dateString = date.toISOString().split('T')[0];
+                const cell = document.createElement('div');
+                cell.className = 'bg-white p-4 rounded shadow text-center';
+
+                const dayButton = document.createElement('button');
+                dayButton.className = 'w-full h-full';
+                dayButton.textContent = day;
+
+                if (musicians[dateString]) {
+                    dayButton.className += ' bg-green-500 text-white';
+                    dayButton.onclick = () => {
+                        window.location.href = `musicians.html?date=${dateString}`;
+                    };
+                }
+
+                cell.appendChild(dayButton);
+                calendar.appendChild(cell);
+            }
+        }
+
+        document.getElementById('prevMonth').onclick = () => {
+            if (currentMonth === 0) {
+                currentMonth = 11;
+                currentYear--;
+            } else {
+                currentMonth--;
+            }
+            loadCalendar();
+        };
+
+        document.getElementById('nextMonth').onclick = () => {
+            if (currentMonth === 11) {
+                currentMonth = 0;
+                currentYear++;
+            } else {
+                currentMonth++;
+            }
+            loadCalendar();
+        };
+
+        loadCalendar();
+    </script>
+</body>
+</html>
